@@ -1,0 +1,20 @@
+# Lazarus / FPC
+lib/
+backup/
+*.o
+*.ppu
+*.compiled
+*.exe
+*.dll
+*.so
+*.dylib
+*.res
+*.lrs
+*.lrt
+*.a
+*.o
+*.dbg
+*.map
+
+# Local overrides (optional — remove line if you want to commit INI)
+# drilling_params.ini
