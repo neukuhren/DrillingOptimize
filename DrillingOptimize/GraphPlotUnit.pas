@@ -23,6 +23,9 @@ type
 
 implementation
 
+uses
+  Math;
+
 function TGraphPlotter.WorldToScreen(CX, CY, W, H: Integer; X1, X2, XMin, XMax, YMin, YMax: Double): TPoint;
 var
   SX, SY: Double;
@@ -139,7 +142,7 @@ begin
     A1 := Lines[I].A1;
     A2 := Lines[I].A2;
     B := Lines[I].B;
-    Canvas.Pen.Color := TColor($000000 + ((I * 37) mod 128) shl 16 + ((I * 19) mod 128) shl 8));
+    Canvas.Pen.Color := TColor($000000 + ((I * 37) mod 128) shl 16 + ((I * 19) mod 128) shl 8);
     Canvas.Pen.Width := 1;
     if Abs(A2) > 1e-9 then
     begin
