@@ -79,7 +79,7 @@ end;
 
 procedure DefaultParams(out P: TCuttingParams);
 begin
-  P := Default(TCuttingParams);
+  FillChar(P, SizeOf(P), 0);
   P.D := 10;
   P.TTool := 60;
   P.Cv := 23;
@@ -269,10 +269,16 @@ var
   X1, X2, La: Double;
   BestLa: Double;
 begin
-  R := Default(TOptResult);
-  FillConstraints(P, Lines);
+  R.Found := False;
+  R.X1Opt := 0;
+  R.X2Opt := 0;
+  R.LaOpt := 0;
+  R.nOpt := 0;
+  R.sOpt := 0;
+  R.VOpt := 0;
   SetLength(R.Vertices, 0);
   R.VertexCount := 0;
+  FillConstraints(P, Lines);
   BestLa := -Infinity;
   R.Found := False;
 
