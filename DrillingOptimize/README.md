@@ -37,7 +37,7 @@
 
 ## Сборка exe
 
-Project → Build. Файл: `DrillingOptimize.exe` в каталоге проекта (или `lib/...`).
+Project → Build. Исполняемый файл **`DrillingOptimize.exe`** создаётся в **корне папки проекта** (в `.lpi` задано `-FE$(ProjPath)`). Если запуск из IDE пишет «файл не найден» — сделайте **Project → Build** и проверьте, что в каталоге проекта есть `DrillingOptimize.exe` (не только в `lib\...`).
 
 **Важно:** открывайте **`DrillingOptimize.lpi`** в каталоге, где лежат `.pas` и `.lfm` (например **`D:\DrillingOptimize`**; без лишней вложенности `DrillingOptimize\DrillingOptimize`).
 

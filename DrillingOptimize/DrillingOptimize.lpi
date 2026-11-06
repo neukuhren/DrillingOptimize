@@ -58,6 +58,9 @@
     <Target>
       <Filename Value="DrillingOptimize"/>
     </Target>
+    <Other>
+      <CustomOptions Value="-FE$(ProjPath)"/>
+    </Other>
     <SearchPaths>
       <IncludeFiles Value="$(ProjDir)"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>

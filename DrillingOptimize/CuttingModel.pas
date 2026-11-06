@@ -79,7 +79,7 @@ end;
 
 procedure DefaultParams(out P: TCuttingParams);
 begin
-  FillChar(P, SizeOf(P), 0);
+  P := Default(TCuttingParams);
   P.D := 10;
   P.TTool := 60;
   P.Cv := 23;
@@ -269,7 +269,7 @@ var
   X1, X2, La: Double;
   BestLa: Double;
 begin
-  FillChar(R, SizeOf(R), 0);
+  R := Default(TOptResult);
   FillConstraints(P, Lines);
   SetLength(R.Vertices, 0);
   R.VertexCount := 0;
