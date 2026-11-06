@@ -39,6 +39,16 @@
 
 Project → Build. Файл: `DrillingOptimize.exe` в каталоге проекта (или `lib/...`).
 
+**Важно:** открывайте **`DrillingOptimize.lpi`** в каталоге, где лежат `.pas` и `.lfm` (обычно `D:\dev\DrillingOptimize`, не вложенная копия `DrillingOptimize\DrillingOptimize`).
+
+После открытия проекта: двойной щелчок по **MainFormUnit** в Project Inspector → вкладка **Form** (дизайнер). Поля параметров создаются в коде в `FormCreate`, в `.lfm` только кнопки, memo и график.
+
+## Исправления совместимости (Lazarus 2.x / 4.x)
+
+- `GraphPlotUnit`: unit **Math** для `ArcTan2`.
+- Не называйте локальную переменную **`Top`** в форме (конфликт с `Controls.Top`).
+- Прокрутка: **`ScrollBox.VertScrollBar.Range`**, не `VertScrollRange`.
+
 ## Документ для записки
 
 См. `docs/POYASNITELNAYA_fragment.md`.

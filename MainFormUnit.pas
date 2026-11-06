@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ComCtrls, CuttingModel, GraphPlotUnit, IniFiles;
+  ComCtrls, Math, CuttingModel, GraphPlotUnit, IniFiles;
 
 type
 
@@ -31,6 +31,8 @@ type
     FLines: array[0..10] of TConstraintLine;
     FHasResult: Boolean;
     FEdits: array of TEdit;
+    procedure AddLabeledEdit(Parent: TWinControl; var LayoutY: Integer;
+      const AName, ACaption: string; out E: TEdit);
     procedure BuildParamEdits;
     function EditByName(const AName: string): TEdit;
     procedure ParamsToForm;
@@ -73,79 +75,80 @@ begin
   Result := nil;
 end;
 
-procedure AddLabeledEdit(Parent: TWinControl; var Top: Integer; const AName, ACaption: string;
-  out E: TEdit);
+procedure TMainForm.AddLabeledEdit(Parent: TWinControl; var LayoutY: Integer;
+  const AName, ACaption: string; out E: TEdit);
 var
   L: TLabel;
 begin
   L := TLabel.Create(Parent);
   L.Parent := Parent;
   L.Left := 8;
-  L.Top := Top;
+  L.Top := LayoutY;
   L.Caption := ACaption;
   E := TEdit.Create(Parent);
   E.Parent := Parent;
   E.Name := AName;
   E.Left := 220;
-  E.Top := Top - 2;
+  E.Top := LayoutY - 2;
   E.Width := 100;
-  Inc(Top, 26);
+  Inc(LayoutY, 26);
 end;
 
 procedure TMainForm.BuildParamEdits;
 var
-  Top: Integer;
+  LayoutY, NextTop: Integer;
   E: TEdit;
-  G: TGroupBox;
+  G, G2: TGroupBox;
 begin
-  Top := 8;
+  LayoutY := 8;
   G := TGroupBox.Create(ScrollBoxParams);
   G.Parent := ScrollBoxParams;
   G.Caption := 'Исходные данные (редактируемые)';
   G.Left := 4;
   G.Top := 4;
   G.Width := 360;
-  Top := 20;
+  LayoutY := 20;
 
   SetLength(FEdits, 0);
-  AddLabeledEdit(G, Top, 'edD', 'D, мм (номинал)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edT', 'T, мин (стойкость)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edCv', 'Cv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edQ', 'q', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edM', 'm', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edY', 'y (подача)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edKv', 'Kv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edNkw', 'N двиг., кВт', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edEta', 'КПД eta', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edNmin', 'n min, об/мин', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edNmax', 'n max, об/мин', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edSmin', 's min, мм/об', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edSmax', 's max, мм/об', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edD', 'D, мм (номинал)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edT', 'T, мин (стойкость)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edCv', 'Cv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edQ', 'q', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edM', 'm', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edY', 'y (подача)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edKv', 'Kv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edNkw', 'N двиг., кВт', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edEta', 'КПД eta', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edNmin', 'n min, об/мин', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edNmax', 'n max, об/мин', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edSmin', 's min, мм/об', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G, LayoutY, 'edSmax', 's max, мм/об', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
 
-  G.Height := Top + 8;
+  G.Height := LayoutY + 8;
+  NextTop := G.Top + G.Height + 8;
 
-  G := TGroupBox.Create(ScrollBoxParams);
-  G.Parent := ScrollBoxParams;
-  G.Caption := 'Коэфф. линеаризованных ограничений (методичка)';
-  G.Left := 4;
-  G.Top := 340;
-  G.Width := 360;
-  Top := 20;
-  AddLabeledEdit(G, Top, 'edYv', 'Yv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edNv', 'Nv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edB3', 'b3 (шерох.)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edStA1', 'Жёстк. a1', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edStA2', 'Жёстк. a2', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edStB', 'Жёстк. b', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edStrA1', 'Прочн. a1', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edStrA2', 'Прочн. a2', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edStrB', 'Прочн. b', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edRghA1', 'Кач. a1', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edRghA2', 'Кач. a2', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edRghB', 'Кач. b', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  AddLabeledEdit(G, Top, 'edAuxB', 'Резерв x1+x2<=', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
-  G.Height := Top + 8;
-  ScrollBoxParams.VertScrollRange := 680;
+  G2 := TGroupBox.Create(ScrollBoxParams);
+  G2.Parent := ScrollBoxParams;
+  G2.Caption := 'Коэфф. линеаризованных ограничений (методичка)';
+  G2.Left := 4;
+  G2.Top := NextTop;
+  G2.Width := 360;
+  LayoutY := 20;
+  AddLabeledEdit(G2, LayoutY, 'edYv', 'Yv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edNv', 'Nv', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edB3', 'b3 (шерох.)', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edStA1', 'Жёстк. a1', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edStA2', 'Жёстк. a2', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edStB', 'Жёстк. b', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edStrA1', 'Прочн. a1', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edStrA2', 'Прочн. a2', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edStrB', 'Прочн. b', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edRghA1', 'Кач. a1', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edRghA2', 'Кач. a2', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edRghB', 'Кач. b', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  AddLabeledEdit(G2, LayoutY, 'edAuxB', 'Резерв x1+x2<=', E); SetLength(FEdits, Length(FEdits)+1); FEdits[High(FEdits)] := E;
+  G2.Height := LayoutY + 8;
+  ScrollBoxParams.VertScrollBar.Range := G2.Top + G2.Height + 16;
 end;
 
 procedure TMainForm.ParamsToForm;
