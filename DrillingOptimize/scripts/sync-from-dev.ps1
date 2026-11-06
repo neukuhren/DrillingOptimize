@@ -1,6 +1,6 @@
-# Обновить D:\dev\DrillingOptimize и отправить на GitHub
+# Обновить локальный проект и отправить на GitHub (ветка master)
 param(
-    [string]$ProjectDir = "D:\dev\DrillingOptimize",
+    [string]$ProjectDir = "D:\DrillingOptimize",
     [string]$Remote = "https://github.com/neukuhren/DrillingOptimize.git"
 )
 
@@ -16,9 +16,8 @@ git remote add origin $Remote
 git add -A
 $status = git status --porcelain
 if ($status) {
-    git commit -m "Sync: Lazarus project updates from dev"
+    git commit -m "Sync: Lazarus project updates"
 }
-git branch -M main
-Write-Host "Pushing to $Remote ..."
-git push -u origin main
-Write-Host "Done. ZIP: https://github.com/neukuhren/DrillingOptimize/archive/refs/heads/main.zip"
+Write-Host "Pushing to $Remote (branch master) ..."
+git push -u origin master
+Write-Host "Done. ZIP: https://github.com/neukuhren/DrillingOptimize/archive/refs/heads/master.zip"

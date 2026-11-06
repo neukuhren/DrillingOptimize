@@ -1,77 +1,53 @@
-# Синхронизация: GitHub и D:\dev\DrillingOptimize
+# Синхронизация: GitHub и локальный ПК
 
-Облачный агент **не может** записывать на ваш диск **D:** и **не может** выполнить `git push` без вашего входа в GitHub.  
-Все правки лежат в этом репозитории (ветка `main`) и в архиве **`releases/DrillingOptimize-2026-11-06.zip`**.
+**Актуальная раскладка (согласовано с автором):**
+
+- Локальный проект: **`D:\DrillingOptimize`** (корень репозитория, без вложенной папки).
+- Удалённый репозиторий: **https://github.com/neukuhren/DrillingOptimize.git**
+- Основная ветка на GitHub: **`master`** (push/pull выполняйте в неё).
+
+Облачный агент не имеет доступа к диску **D:** и к вашему GitHub-аккаунту; push/pull делаете вы на ПК.
 
 ---
 
-## A. Обновить папку на ПК (без Git)
-
-1. Скачайте архив с GitHub (после шага B) или из релиза в папке `releases/`.
-2. Распакуйте **поверх** `D:\dev\DrillingOptimize` (заменить файлы).
-3. Откройте **`DrillingOptimize.lpi`** (файл в **корне** папки, не во вложенной `DrillingOptimize\DrillingOptimize`).
-
-PowerShell:
+## Обновить папку с GitHub (pull)
 
 ```powershell
-Expand-Archive -Path "$env:USERPROFILE\Downloads\DrillingOptimize-2026-11-06.zip" -DestinationPath D:\dev\ -Force
-# если в zip есть одна папка DrillingOptimize — путь будет D:\dev\DrillingOptimize
+cd D:\DrillingOptimize
+git pull origin master
 ```
 
 ---
 
-## B. Залить обновления на GitHub (с вашего ПК, один раз)
-
-В каталоге проекта, где уже есть `.git`:
+## Сохранить изменения и отправить на GitHub
 
 ```powershell
-cd D:\dev\DrillingOptimize
-git remote set-url origin https://github.com/neukuhren/DrillingOptimize.git
+cd D:\DrillingOptimize
 git add -A
 git status
-git commit -m "Lazarus fixes: Math, LayoutY, VertScrollBar, lpi MainUnit"
-git branch -M main
-git push -u origin main
-```
-
-Если репозиторий на GitHub **пустой**, а локально уже есть история — push пройдёт.  
-Если GitHub отклонит (несовпадение историй):
-
-```powershell
-git pull origin main --allow-unrelated-histories
-# разрешить merge при необходимости
-git push origin main
-```
-
-**TLS / auth:** при ошибке SSL используйте SSH:
-
-```powershell
-git remote set-url origin git@github.com:neukuhren/DrillingOptimize.git
-git push -u origin main
+git commit -m "Описание правок"
+git push -u origin master
 ```
 
 ---
 
-## C. Скачать ZIP с GitHub (без Git)
+## Скачать ZIP без Git
 
-После успешного push:
+Ветка **master**:
 
-**https://github.com/neukuhren/DrillingOptimize/archive/refs/heads/main.zip**
-
----
-
-## D. Скрипт на Windows (обновление + push)
-
-```powershell
-powershell -ExecutionPolicy Bypass -File D:\dev\DrillingOptimize\scripts\sync-from-dev.ps1
-```
-
-(см. `scripts/sync-from-dev.ps1`)
+**https://github.com/neukuhren/DrillingOptimize/archive/refs/heads/master.zip**
 
 ---
 
-## Последние изменения в коде
+## Скрипты
 
-- `GraphPlotUnit.pas` — `uses Math`, исправлен `TColor(...)`.
-- `MainFormUnit.pas` — переменная `LayoutY` вместо `Top`, `VertScrollBar.Range`.
-- `DrillingOptimize.lpi` — `UseMainFormUnit`, `MainUnit` = 1.
+- `scripts/setup-windows.ps1` — клонирование в **`D:\DrillingOptimize`**.
+- `scripts/sync-from-dev.ps1` — commit + push в **master** (по умолчанию каталог **`D:\DrillingOptimize`**).
+
+---
+
+## Последние правки в коде (для справки)
+
+- `GraphPlotUnit.pas` — `uses Math`, корректное выражение `TColor(...)`.
+- `MainFormUnit.pas` — переменная `LayoutY` вместо конфликтующего `Top`, прокрутка через `VertScrollBar.Range`.
+- `DrillingOptimize.lpi` — `UseMainFormUnit`, `MainUnit` для открытия формы в IDE.

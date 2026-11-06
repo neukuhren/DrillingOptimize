@@ -39,7 +39,7 @@
 
 Project → Build. Файл: `DrillingOptimize.exe` в каталоге проекта (или `lib/...`).
 
-**Важно:** открывайте **`DrillingOptimize.lpi`** в каталоге, где лежат `.pas` и `.lfm` (обычно `D:\dev\DrillingOptimize`, не вложенная копия `DrillingOptimize\DrillingOptimize`).
+**Важно:** открывайте **`DrillingOptimize.lpi`** в каталоге, где лежат `.pas` и `.lfm` (например **`D:\DrillingOptimize`**; без лишней вложенности `DrillingOptimize\DrillingOptimize`).
 
 После открытия проекта: двойной щелчок по **MainFormUnit** в Project Inspector → вкладка **Form** (дизайнер). Поля параметров создаются в коде в `FormCreate`, в `.lfm` только кнопки, memo и график.
 
