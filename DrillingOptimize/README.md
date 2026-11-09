@@ -5,7 +5,8 @@
 ## Среда
 
 - **Lazarus 4.8**, **FPC 3.2.2**, Windows x64 (у вас на скриншоте).
-- Открыть `DrillingOptimize.lpi` → **Run**.
+- **Проект → Открыть проект** → `DrillingOptimize.lpi` (если ошибка «нет главного файла» — см. `docs/LAZARUS_BUILD.md`, откройте **`DrillingOptimize.lpr`**).
+- Сборка: **Проект → Скомпилировать**, запуск: **F9**.
 
 ## Структура
 
