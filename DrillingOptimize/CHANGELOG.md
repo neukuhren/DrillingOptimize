@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-09
+
+- `MainFormUnit`: параметр `Parent` → `AOwner` (конфликт с `TControl.Parent` в Lazarus 4.2).
+
 ## 2026-11-06
 
 - **Exe в корне проекта:** в `DrillingOptimize.lpi` добавлена опция `-FE$(ProjPath)`, чтобы IDE находила `DrillingOptimize.exe` при Run (раньше exe мог попадать только в `lib\...`).
