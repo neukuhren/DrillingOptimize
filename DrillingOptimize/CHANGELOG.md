@@ -2,6 +2,7 @@
 
 ## 2026-11-09
 
+- `DrillingOptimize.lpr`: удалён `Application.SynchronizeFormWakeups` (нет в LCL Lazarus 2.0.x; мешало линковке exe).
 - `MainFormUnit`: параметр `Parent` → `AOwner` (конфликт с `TControl.Parent` в Lazarus 4.2).
 
 ## 2026-11-06

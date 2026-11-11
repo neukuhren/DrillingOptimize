@@ -55,6 +55,12 @@
 
 ---
 
+## Ошибка `SynchronizeFormWakeups` (Lazarus 2.0.x)
+
+В старых версиях LCL нет свойства `Application.SynchronizeFormWakeups`. В актуальном `DrillingOptimize.lpr` эта строка **удалена**. Обновите файл из репозитория или удалите строку 16 вручную.
+
+---
+
 ## Распаковка
 
 Все файлы проекта (**`.lpr`, `.lpi`, `.pas`, `.lfm`**) должны лежать **в одной папке** `C:\DrillingOptimize`, без лишнего уровня `DrillingOptimize\DrillingOptimize\`.
