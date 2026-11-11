@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-11
+
+- Репозиторий: один уровень — исходники в корне; удалены дубликат `DrillingOptimize/`, старые `.zip` и `releases/`.
+
 ## 2026-11-09
 
 - `DrillingOptimize.lpr`: удалён `Application.SynchronizeFormWakeups` (нет в LCL Lazarus 2.0.x; мешало линковке exe).

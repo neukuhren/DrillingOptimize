@@ -16,5 +16,8 @@ backup/
 *.dbg
 *.map
 
+# Archives (use git clone; do not commit zips)
+*.zip
+
 # Local overrides (optional — remove line if you want to commit INI)
 # drilling_params.ini

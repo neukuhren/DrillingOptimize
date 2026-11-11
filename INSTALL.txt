@@ -19,4 +19,4 @@
    Application.CreateForm(TMainForm, MainForm);
    Application.Run;
 
-Архив: DrillingOptimize-2026-11-11.zip (корень без лишней вложенности).
+Клон: git clone https://github.com/neukuhren/DrillingOptimize.git C:\DrillingOptimize

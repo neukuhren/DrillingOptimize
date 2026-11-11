@@ -35,7 +35,7 @@ git push -u origin master
 
 Ветка **master**:
 
-**https://github.com/neukuhren/DrillingOptimize/archive/refs/heads/master.zip**
+**https://github.com/neukuhren/DrillingOptimize/archive/refs/heads/master.zip** (все исходники; отдельные zip в репозитории не хранятся)
 
 ---
 
