@@ -269,10 +269,16 @@ var
   X1, X2, La: Double;
   BestLa: Double;
 begin
-  FillChar(R, SizeOf(R), 0);
-  FillConstraints(P, Lines);
+  R.Found := False;
+  R.X1Opt := 0;
+  R.X2Opt := 0;
+  R.LaOpt := 0;
+  R.nOpt := 0;
+  R.sOpt := 0;
+  R.VOpt := 0;
   SetLength(R.Vertices, 0);
   R.VertexCount := 0;
+  FillConstraints(P, Lines);
   BestLa := -Infinity;
   R.Found := False;
 

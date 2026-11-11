@@ -31,7 +31,7 @@ type
     FLines: array[0..10] of TConstraintLine;
     FHasResult: Boolean;
     FEdits: array of TEdit;
-    procedure AddLabeledEdit(Parent: TWinControl; var LayoutY: Integer;
+    procedure AddLabeledEdit(AOwner: TWinControl; var LayoutY: Integer;
       const AName, ACaption: string; out E: TEdit);
     procedure BuildParamEdits;
     function EditByName(const AName: string): TEdit;
@@ -75,18 +75,18 @@ begin
   Result := nil;
 end;
 
-procedure TMainForm.AddLabeledEdit(Parent: TWinControl; var LayoutY: Integer;
+procedure TMainForm.AddLabeledEdit(AOwner: TWinControl; var LayoutY: Integer;
   const AName, ACaption: string; out E: TEdit);
 var
   L: TLabel;
 begin
-  L := TLabel.Create(Parent);
-  L.Parent := Parent;
+  L := TLabel.Create(AOwner);
+  L.Parent := AOwner;
   L.Left := 8;
   L.Top := LayoutY;
   L.Caption := ACaption;
-  E := TEdit.Create(Parent);
-  E.Parent := Parent;
+  E := TEdit.Create(AOwner);
+  E.Parent := AOwner;
   E.Name := AName;
   E.Left := 220;
   E.Top := LayoutY - 2;

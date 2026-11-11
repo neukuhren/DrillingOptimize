@@ -13,7 +13,6 @@ uses
 
 begin
   RequireDerivedFormResource := True;
-  Application.SynchronizeFormWakeups := False;
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;

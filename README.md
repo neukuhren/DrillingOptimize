@@ -5,7 +5,8 @@
 ## Среда
 
 - **Lazarus 4.8**, **FPC 3.2.2**, Windows x64 (у вас на скриншоте).
-- Открыть `DrillingOptimize.lpi` → **Run**.
+- **Проект → Открыть проект** → `DrillingOptimize.lpi` (если ошибка «нет главного файла» — см. `docs/LAZARUS_BUILD.md`, откройте **`DrillingOptimize.lpr`**).
+- Сборка: **Проект → Скомпилировать**, запуск: **F9**.
 
 ## Структура
 
@@ -37,9 +38,9 @@
 
 ## Сборка exe
 
-Project → Build. Файл: `DrillingOptimize.exe` в каталоге проекта (или `lib/...`).
+Project → Build. Исполняемый файл **`DrillingOptimize.exe`** создаётся в **корне папки проекта** (в `.lpi` задано `-FE$(ProjPath)`). Если запуск из IDE пишет «файл не найден» — сделайте **Project → Build** и проверьте, что в каталоге проекта есть `DrillingOptimize.exe` (не только в `lib\...`).
 
-**Важно:** открывайте **`DrillingOptimize.lpi`** в каталоге, где лежат `.pas` и `.lfm` (обычно `D:\dev\DrillingOptimize`, не вложенная копия `DrillingOptimize\DrillingOptimize`).
+**Важно:** открывайте **`DrillingOptimize.lpi`** в каталоге, где лежат `.pas` и `.lfm` (например **`D:\DrillingOptimize`**; без лишней вложенности `DrillingOptimize\DrillingOptimize`).
 
 После открытия проекта: двойной щелчок по **MainFormUnit** в Project Inspector → вкладка **Form** (дизайнер). Поля параметров создаются в коде в `FormCreate`, в `.lfm` только кнопки, memo и график.
 
