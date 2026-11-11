@@ -1,0 +1,68 @@
+object MainForm: TMainForm
+  Left = 0
+  Height = 640
+  Top = 0
+  Width = 1024
+  Caption = 'Оптимизация режимов сверления (Lazarus)'
+  ClientHeight = 640
+  ClientWidth = 1024
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '4.0.0.0'
+  object ScrollBoxParams: TScrollBox
+    Left = 0
+    Height = 640
+    Top = 0
+    Width = 380
+    Align = alLeft
+    TabOrder = 0
+  end
+  object PaintBoxGraph: TPaintBox
+    Left = 380
+    Height = 420
+    Top = 0
+    Width = 644
+    Align = alClient
+    OnPaint = PaintBoxGraphPaint
+  end
+  object MemoLog: TMemo
+    Left = 380
+    Height = 220
+    Top = 420
+    Width = 644
+    Align = alBottom
+    ReadOnly = True
+    ScrollBars = ssAutoVertical
+    TabOrder = 1
+  end
+  object BtnCalc: TButton
+    Left = 8
+    Height = 32
+    Top = 600
+    Width = 120
+    Anchors = [akLeft, akBottom]
+    Caption = 'Расчёт'
+    OnClick = BtnCalcClick
+    TabOrder = 2
+  end
+  object BtnSaveIni: TButton
+    Left = 136
+    Height = 32
+    Top = 600
+    Width = 120
+    Anchors = [akLeft, akBottom]
+    Caption = 'Сохранить INI'
+    OnClick = BtnSaveIniClick
+    TabOrder = 3
+  end
+  object BtnLoadIni: TButton
+    Left = 264
+    Height = 32
+    Top = 600
+    Width = 108
+    Anchors = [akLeft, akBottom]
+    Caption = 'Загрузить INI'
+    OnClick = BtnLoadIniClick
+    TabOrder = 4
+  end
+end
