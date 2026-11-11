@@ -57,7 +57,9 @@ begin
   BuildParamEdits;
   ParamsToForm;
   if FileExists(IniPath) then
-    BtnLoadIniClick(nil);
+    BtnLoadIniClick(nil)
+  else
+    PrepareParams(FParams);
 end;
 
 function TMainForm.IniPath: string;
@@ -242,6 +244,7 @@ end;
 procedure TMainForm.BtnCalcClick(Sender: TObject);
 begin
   FormToParams;
+  PrepareParams(FParams);
   FHasResult := FindOptimum(FParams, FResult);
   FillConstraints(FParams, FLines);
   if not FHasResult then
@@ -254,9 +257,12 @@ procedure TMainForm.PaintBoxGraphPaint(Sender: TObject);
 begin
   if not FHasResult then
   begin
-    PaintBoxGraph.Canvas.Brush.Color := clBtnFace;
-    PaintBoxGraph.Canvas.FillRect(PaintBoxGraph.ClientRect);
-    Exit;
+    if FResult.VertexCount = 0 then
+    begin
+      PaintBoxGraph.Canvas.Brush.Color := clBtnFace;
+      PaintBoxGraph.Canvas.FillRect(PaintBoxGraph.ClientRect);
+      Exit;
+    end;
   end;
   FPlotter.Draw(PaintBoxGraph.Canvas, PaintBoxGraph.ClientRect, FLines,
     FResult.Vertices, FResult.X1Opt, FResult.X2Opt, True);

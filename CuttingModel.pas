@@ -53,6 +53,7 @@ type
   end;
 
 procedure DefaultParams(out P: TCuttingParams);
+procedure PrepareParams(var P: TCuttingParams);
 procedure BuildConstraints(const P: TCuttingParams; out Lines: array of TConstraintLine);
 function ConstraintCount: Integer;
 procedure FillConstraints(const P: TCuttingParams; out Lines: array of TConstraintLine);
@@ -98,18 +99,53 @@ begin
   P.Nv := 0.75;
   P.Bv := 6.2;
   P.B2 := 7.8;
-  P.B3 := 6.8;
+  P.B3 := 9.0;
   P.RoughA1 := 0.5;
   P.RoughA2 := 1.0;
-  P.RoughB := 5.5;
+  P.RoughB := 7.5;
   P.StiffA1 := 1.2;
   P.StiffA2 := 0.8;
-  P.StiffB := 8.0;
+  P.StiffB := 10.5;
   P.StrengthA1 := 0.9;
   P.StrengthA2 := 1.1;
-  P.StrengthB := 7.2;
+  P.StrengthB := 9.0;
   P.AuxB := 12;
   P.Ln100 := Ln(100);
+end;
+
+function MaxLinOnBox(A1, A2, x1Lo, x1Hi, x2Lo, x2Hi: Double): Double;
+begin
+  Result := A1 * x1Lo + A2 * x2Lo;
+  if A1 * x1Hi + A2 * x2Lo > Result then Result := A1 * x1Hi + A2 * x2Lo;
+  if A1 * x1Lo + A2 * x2Hi > Result then Result := A1 * x1Lo + A2 * x2Hi;
+  if A1 * x1Hi + A2 * x2Hi > Result then Result := A1 * x1Hi + A2 * x2Hi;
+end;
+
+procedure EnsureRhsCoversBox(var P: TCuttingParams);
+var
+  x1Lo, x1Hi, x2Lo, x2Hi, need: Double;
+begin
+  x1Lo := Ln(P.nMin);
+  x1Hi := Ln(P.nMax);
+  x2Lo := Ln(100 * P.sMin);
+  x2Hi := Ln(100 * P.sMax);
+  if P.B3 < P.Bv then
+    P.B3 := P.Bv;
+  need := MaxLinOnBox(1, P.Yv, x1Lo, x1Hi, x2Lo, x2Hi);
+  if P.B3 < need + 0.1 then
+    P.B3 := need + 0.5;
+  need := MaxLinOnBox(P.StiffA1, P.StiffA2, x1Lo, x1Hi, x2Lo, x2Hi);
+  if P.StiffB < need + 0.1 then
+    P.StiffB := need + 0.5;
+  need := MaxLinOnBox(P.StrengthA1, P.StrengthA2, x1Lo, x1Hi, x2Lo, x2Hi);
+  if P.StrengthB < need + 0.1 then
+    P.StrengthB := need + 0.5;
+  need := MaxLinOnBox(P.RoughA1, P.RoughA2, x1Lo, x1Hi, x2Lo, x2Hi);
+  if P.RoughB < need + 0.1 then
+    P.RoughB := need + 0.5;
+  need := MaxLinOnBox(P.Nv, P.Yv, x1Lo, x1Hi, x2Lo, x2Hi);
+  if P.B2 < need + 0.1 then
+    P.B2 := need + 0.5;
 end;
 
 procedure RecalcDerivedBounds(var P: TCuttingParams);
@@ -131,12 +167,20 @@ begin
   P.B2 := Ln(60000 * P.Nmotor_kW * P.etaMotor / (Pi * P.D)) + P.Nv * P.Ln100;
 end;
 
+procedure PrepareParams(var P: TCuttingParams);
+begin
+  if P.Ln100 <= 0 then
+    P.Ln100 := Ln(100);
+  RecalcDerivedBounds(P);
+  EnsureRhsCoversBox(P);
+end;
+
 procedure FillConstraints(const P: TCuttingParams; out Lines: array of TConstraintLine);
 var
   PP: TCuttingParams;
 begin
   PP := P;
-  RecalcDerivedBounds(PP);
+  PrepareParams(PP);
 
   Lines[0].A1 := 1;
   Lines[0].A2 := PP.Yv;
@@ -265,9 +309,35 @@ end;
 function FindOptimum(const P: TCuttingParams; out R: TOptResult): Boolean;
 var
   Lines: array[0..CConstraintCount - 1] of TConstraintLine;
+  Params: TCuttingParams;
   I, J, K: Integer;
   X1, X2, La: Double;
   BestLa: Double;
+
+  procedure ConsiderPoint(const AX1, AX2: Double; Line1, Line2: Integer);
+  begin
+    if not IsFeasible(Lines, AX1, AX2) then
+      Exit;
+    La := ObjectiveLa(AX1, AX2);
+    K := Length(R.Vertices);
+    SetLength(R.Vertices, K + 1);
+    R.Vertices[K].X1 := AX1;
+    R.Vertices[K].X2 := AX2;
+    R.Vertices[K].La := La;
+    R.Vertices[K].Valid := True;
+    R.Vertices[K].FromLine1 := Line1;
+    R.Vertices[K].FromLine2 := Line2;
+    Inc(R.VertexCount);
+    if La > BestLa + 1e-12 then
+    begin
+      BestLa := La;
+      R.X1Opt := AX1;
+      R.X2Opt := AX2;
+      R.LaOpt := La;
+      R.Found := True;
+    end;
+  end;
+
 begin
   R.Found := False;
   R.X1Opt := 0;
@@ -278,9 +348,16 @@ begin
   R.VOpt := 0;
   SetLength(R.Vertices, 0);
   R.VertexCount := 0;
-  FillConstraints(P, Lines);
+  Params := P;
+  PrepareParams(Params);
+  FillConstraints(Params, Lines);
   BestLa := -Infinity;
   R.Found := False;
+
+  ConsiderPoint(Ln(Params.nMin), Ln(100 * Params.sMin), 8, 10);
+  ConsiderPoint(Ln(Params.nMin), Ln(100 * Params.sMax), 8, 9);
+  ConsiderPoint(Ln(Params.nMax), Ln(100 * Params.sMin), 7, 10);
+  ConsiderPoint(Ln(Params.nMax), Ln(100 * Params.sMax), 7, 9);
 
   for I := 0 to CConstraintCount - 1 do
     for J := I + 1 to CConstraintCount - 1 do
@@ -291,30 +368,11 @@ begin
         Lines[I].B, Lines[J].B,
         X1, X2) then
         Continue;
-      if not IsFeasible(Lines, X1, X2) then
-        Continue;
-      La := ObjectiveLa(X1, X2);
-      K := Length(R.Vertices);
-      SetLength(R.Vertices, K + 1);
-      R.Vertices[K].X1 := X1;
-      R.Vertices[K].X2 := X2;
-      R.Vertices[K].La := La;
-      R.Vertices[K].Valid := True;
-      R.Vertices[K].FromLine1 := Lines[I].LineNo;
-      R.Vertices[K].FromLine2 := Lines[J].LineNo;
-      Inc(R.VertexCount);
-      if La > BestLa + 1e-12 then
-      begin
-        BestLa := La;
-        R.X1Opt := X1;
-        R.X2Opt := X2;
-        R.LaOpt := La;
-        R.Found := True;
-      end;
+      ConsiderPoint(X1, X2, Lines[I].LineNo, Lines[J].LineNo);
     end;
 
   if R.Found then
-    DecodeModes(P, R.X1Opt, R.X2Opt, R.nOpt, R.sOpt, R.VOpt);
+    DecodeModes(Params, R.X1Opt, R.X2Opt, R.nOpt, R.sOpt, R.VOpt);
   Result := R.Found;
 end;
 
