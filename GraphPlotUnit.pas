@@ -82,12 +82,14 @@ procedure TGraphPlotter.Draw(Canvas: TCanvas; Rect: TRect;
   const Vertices: array of TPoint2;
   const OptX1, OptX2: Double; HasOpt: Boolean);
 var
-  W, H, I, J: Integer;
+  W, H, I, J, K: Integer;
   XMin, XMax, YMin, YMax: Double;
   P1, P2, PO: TPoint;
   A1, A2, B, Xa, Xb: Double;
   Poly: array of TPoint;
   Cx, Cy: Integer;
+  CxW, CyW, AngI, AngJ: Double;
+  Idx: array of Integer;
 begin
   FMargin := 36;
   W := Rect.Width;
@@ -114,23 +116,37 @@ begin
   Canvas.MoveTo(P1.X, P1.Y);
   Canvas.LineTo(P2.X, P2.Y);
 
-  { многоугольник ОДР по вершинам }
+  { многоугольник ОДР: порядок вершин по углу относительно центра в (x1, x2), не на экране }
   if Length(Vertices) >= 3 then
   begin
-    SetLength(Poly, Length(Vertices));
+    CxW := 0;
+    CyW := 0;
     for I := 0 to High(Vertices) do
-      Poly[I] := WorldToScreen(Cx, Cy, W, H, Vertices[I].X1, Vertices[I].X2,
-        XMin, XMax, YMin, YMax);
-    { простая сортировка по углу для заливки }
-    for I := 0 to High(Poly) do
-      for J := I + 1 to High(Poly) do
-        if ArcTan2(Poly[J].Y - Poly[0].Y, Poly[J].X - Poly[0].X) <
-           ArcTan2(Poly[I].Y - Poly[0].Y, Poly[I].X - Poly[0].X) then
+    begin
+      CxW := CxW + Vertices[I].X1;
+      CyW := CyW + Vertices[I].X2;
+    end;
+    CxW := CxW / Length(Vertices);
+    CyW := CyW / Length(Vertices);
+    SetLength(Idx, Length(Vertices));
+    for I := 0 to High(Idx) do
+      Idx[I] := I;
+    for I := 0 to High(Idx) - 1 do
+      for J := I + 1 to High(Idx) do
+      begin
+        AngI := ArcTan2(Vertices[Idx[I]].X2 - CyW, Vertices[Idx[I]].X1 - CxW);
+        AngJ := ArcTan2(Vertices[Idx[J]].X2 - CyW, Vertices[Idx[J]].X1 - CxW);
+        if AngJ < AngI then
         begin
-          P1 := Poly[I];
-          Poly[I] := Poly[J];
-          Poly[J] := P1;
+          K := Idx[I];
+          Idx[I] := Idx[J];
+          Idx[J] := K;
         end;
+      end;
+    SetLength(Poly, Length(Vertices));
+    for I := 0 to High(Idx) do
+      Poly[I] := WorldToScreen(Cx, Cy, W, H,
+        Vertices[Idx[I]].X1, Vertices[Idx[I]].X2, XMin, XMax, YMin, YMax);
     Canvas.Brush.Color := $00E0E0FF;
     Canvas.Pen.Color := $008080FF;
     Canvas.Polygon(Poly);
