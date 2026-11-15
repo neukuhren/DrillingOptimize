@@ -52,4 +52,6 @@ Project → Build. Исполняемый файл **`DrillingOptimize.exe`** с
 
 ## Документ для записки
 
-См. `docs/POYASNITELNAYA_fragment.md`.
+- **`docs/KURSOVAYA_RAZDELY_2_3_D12.md`** — разделы 2–3 для вставки в Word (D = 12 мм, сравнение с ТП).
+- `docs/POYASNITELNAYA_fragment.md` — короткий фрагмент.
+- `docs/GRAPH_ODR_OPT_FAQ.md` — почему opt «вне» розовой ОДР на старом графике.
