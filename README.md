@@ -52,6 +52,7 @@ Project → Build. Исполняемый файл **`DrillingOptimize.exe`** с
 
 ## Документ для записки
 
-- **`docs/KURSOVAYA_RAZDELY_2_3_D12.md`** — разделы 2–3 для вставки в Word (D = 12 мм, сравнение с ТП).
+- **`docs/poyasnitelnaya_zapisaka_techprocess_D12.docx`** — пояснительная записка (техпроцесс) с заполненными **2.13.2–2.13.3**.
+- **`docs/KURSOVAYA_RAZDELY_2_3_D12.md`** — те же разделы в Markdown (резервная копия текста).
 - `docs/POYASNITELNAYA_fragment.md` — короткий фрагмент.
 - `docs/GRAPH_ODR_OPT_FAQ.md` — почему opt «вне» розовой ОДР на старом графике.
