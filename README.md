@@ -52,7 +52,8 @@ Project → Build. Исполняемый файл **`DrillingOptimize.exe`** с
 
 ## Документ для записки
 
-- **`docs/poyasnitelnaya_zapisaka_techprocess_D12.docx`** — пояснительная записка (техпроцесс) с заполненными **2.13.2–2.13.3**.
-- **`docs/KURSOVAYA_RAZDELY_2_3_D12.md`** — те же разделы в Markdown (резервная копия текста).
+- **`docs/Prilozhenie_optimizatsiya_sverlenie_D12.docx`** — **приложение** к курсовой: оформление как **Kursovaya_rabota_primer**, разд. 3 — Lazarus, **Замечание по ОДР**, **Приложение А** — `GraphPlotUnit.pas`.
+- **`docs/appendix/GraphPlotUnit.pas`** — копия модуля для печати/архива.
+- **`docs/KURSOVAYA_RAZDELY_2_3_D12.md`** — текст в Markdown (резерв).
 - `docs/POYASNITELNAYA_fragment.md` — короткий фрагмент.
 - `docs/GRAPH_ODR_OPT_FAQ.md` — почему opt «вне» розовой ОДР на старом графике.
